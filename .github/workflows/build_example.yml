@@ -1,50 +1,36 @@
-name: build example
+name: Build TAR
+
 on:
   workflow_dispatch:
-    inputs:
-      flutter_version:
-        description: 'Flutter version'
-        required: true
-        default: '3.35.7'
-      flutter_channel:
-        description: 'Flutter channel'
-        required: true
-        default: 'stable'
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+env:
+  FLUTTER_VERSION: "3.35.7"
 
 jobs:
-  web:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ inputs.flutter_version }}
-          channel: ${{ inputs.flutter_channel }}
-
-      - uses: bluefireteam/melos-action@v3
-
-      - name: Build
-        working-directory: ./example
-        run: flutter build web --base-href "/audioplayers/" --wasm
-
-      - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./example/build/web
-
-  deploy:
-    needs: web
+  build_tar:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake libgtk-3-dev ninja-build libayatana-appindicator3-dev libfuse2 libmpv-dev mpv libmimalloc-dev libmimalloc2.0
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version:  ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Web App
+        run: flutter build web --wasm
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
