@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:example/edit_button_style.dart';
 import 'package:example/theme_state.dart';
@@ -10,7 +9,6 @@ import 'package:linux_csd_buttons/linux_csd_buttons.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'mutable_csd_theme.dart';
-
 final mainScreenKey = GlobalKey();
 
 void main() async {
@@ -18,20 +16,6 @@ void main() async {
 
   final themeData = jsonDecode(await rootBundle.loadString("assets/example.json"));
   themeState.theme = MutableCsdTheme.fromJson(themeData);
-  // await windowManager.ensureInitialized();
-  // if (Platform.isLinux) {
-  //   WindowOptions windowOptions = WindowOptions(
-  //     size: Size(1280, 720),
-  //     center: true,
-  //     backgroundColor: Colors.transparent,
-  //     skipTaskbar: false,
-  //     titleBarStyle: TitleBarStyle.hidden,
-  //   );
-  //   windowManager.waitUntilReadyToShow(windowOptions, () async {
-  //     await windowManager.show();
-  //     await windowManager.focus();
-  //   });
-  // }
   runApp(MyApp(key: mainScreenKey));
 }
 
@@ -154,7 +138,7 @@ class _MyAppState extends State<MyApp> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(onPressed: () async {
-                            final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ["svg"], allowMultiple: false);
+                            final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ["json"], allowMultiple: false);
                             final xFile = result?.files.firstOrNull?.xFile;
                             if(xFile != null) {
                               final iconData = await xFile.readAsString();
@@ -163,13 +147,87 @@ class _MyAppState extends State<MyApp> {
                               });
                             }
                           }, child: Text("Import")),
-                          TextButton(onPressed: () async {
-                            final filePath = await FilePicker.platform.saveFile(fileName: "theme.json");
-                            if(filePath != null) {
-                              final file = File(filePath);
-                              file.writeAsString(jsonEncode(themeState.theme.toJson()));
+                          Builder(
+                            builder: (context) {
+                              return TextButton(
+                                onPressed: () {
+                                  final encoder = const JsonEncoder.withIndent('  ');
+                                  final String themeJson = encoder.convert(themeState.theme.toJson());
+
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text("Export Theme"),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "Copy the configuration below:",
+                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                            ),
+                                            const SizedBox(height: 12),
+                                            // JSON 미리보기 영역
+                                            Container(
+                                              width: double.maxFinite,
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                                borderRadius: BorderRadius.circular(12),
+                                                border: Border.all(color: Theme.of(context).dividerColor),
+                                              ),
+                                              constraints: const BoxConstraints(maxHeight: 300),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(12),
+                                                child: SingleChildScrollView(
+                                                  padding: const EdgeInsets.all(16),
+                                                  child: SelectableText(
+                                                    themeJson,
+                                                    style: const TextStyle(
+                                                      fontFamily: 'monospace',
+                                                      fontSize: 13,
+                                                      height: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: const Text("Close"),
+                                          ),
+                                          FilledButton.icon(
+                                            icon: const Icon(Icons.content_copy_rounded, size: 18),
+                                            label: const Text("Copy to Clipboard"),
+                                            onPressed: () async {
+                                              await Clipboard.setData(ClipboardData(text: themeJson));
+
+                                              if (context.mounted) {
+                                                Navigator.pop(context);
+
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    content: const Text("Theme JSON copied to clipboard!"),
+                                                    behavior: SnackBarBehavior.floating,
+                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                    width: 300,
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: const Text("Export"),
+                              );
                             }
-                          }, child: Text("Export"))
+                          )
                         ],
                       ),
                     )
