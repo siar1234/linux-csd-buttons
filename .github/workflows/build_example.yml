@@ -38,7 +38,7 @@ jobs:
           path: ./example/build/web
 
   deploy:
-    needs: web
+    needs: build_example
     runs-on: ubuntu-latest
     environment:
       name: github-pages
