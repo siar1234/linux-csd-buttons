@@ -168,7 +168,7 @@ class _MyAppState extends State<MyApp> {
                                               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                                             ),
                                             const SizedBox(height: 12),
-                                            // JSON 미리보기 영역
+
                                             Container(
                                               width: double.maxFinite,
                                               decoration: BoxDecoration(
