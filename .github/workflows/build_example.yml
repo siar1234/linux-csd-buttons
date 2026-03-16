@@ -1,4 +1,4 @@
-name: Build TAR
+name: Build Example
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ env:
   FLUTTER_VERSION: "3.35.7"
 
 jobs:
-  build_tar:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,8 +29,21 @@ jobs:
         run: flutter pub get
 
       - name: Build Web App
+        working-directory: ./example
         run: flutter build web --wasm
 
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./example/build/web
+
+  deploy:
+    needs: web
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
