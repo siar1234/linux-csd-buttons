@@ -8,7 +8,7 @@ env:
 
 jobs:
   build_example:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu:24.04
 
     steps:
       - name: Checkout repository
@@ -39,7 +39,7 @@ jobs:
 
   deploy:
     needs: build_example
-    runs-on: ubuntu-latest
+    runs-on: ubuntu:24.04
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
