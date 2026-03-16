@@ -7,7 +7,7 @@ env:
   FLUTTER_VERSION: "3.35.7"
 
 jobs:
-  build:
+  build_example:
     runs-on: ubuntu-latest
 
     steps:
