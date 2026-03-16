@@ -1,0 +1,18 @@
+name: linux_csd_buttons
+description: Client-Side Decoration (CSD) window controls for Linux, fully customizable via JSON themes.
+version: 1.0.0
+repository: https://github.com/siar1234/linux-csd-buttons
+
+environment:
+  sdk: ^3.5.1
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.2.4
+  hexcolor: ^3.0.2
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.6
