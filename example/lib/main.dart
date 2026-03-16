@@ -73,7 +73,7 @@ class _MyAppState extends State<MyApp> {
                   left: 0,
                   right: 0,
                   top: 0,
-                  child: Text("Theme generator", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                  child: Text("Theme Generator", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
               Positioned(
                   right: 0,
                   top: 0,
