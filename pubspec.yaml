@@ -11,7 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.2.4
-  hexcolor: ^3.0.2
 
 dev_dependencies:
   lints: ^6.0.0
