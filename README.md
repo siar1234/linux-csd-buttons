@@ -2,7 +2,7 @@
 
 Client-Side Decoration window controls for Linux, fully customizable via JSON themes.
 
-![Demo Preview](demo.png)
+![Demo Preview](https://raw.githubusercontent.com/siar1234/linux-csd-buttons/main/demo.png)
 [Live Demo (Theme Generator)](https://theme-generator.pages.dev)
 
 ## Installation
