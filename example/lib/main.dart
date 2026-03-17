@@ -340,7 +340,16 @@ class _MaximizeOrRestoreButtonState extends State<MaximizeOrRestoreButton> with 
   @override
   Widget build(BuildContext context) {
     return CsdButton(theme: widget.csdThemeData, type: buttonType, onPressed: () {
-
+      if(buttonType == CsdButtonType.restore) {
+        setState(() {
+          buttonType = CsdButtonType.maximize;
+        });
+      }
+      else {
+        setState(() {
+          buttonType = CsdButtonType.restore;
+        });
+      }
     });
   }
 }
