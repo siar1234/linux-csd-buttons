@@ -106,15 +106,21 @@ class MutableCsdButtonStyle {
 }
 
 class MutableCsdTheme {
+  String? name;
+  String? author;
   MutableCsdButtonStyle close;
   MutableCsdButtonStyle minimize;
   MutableCsdButtonStyle maximize;
   MutableCsdButtonStyle restore;
 
-  MutableCsdTheme({required this.close, required this.minimize, required this.maximize, required this.restore});
+  MutableCsdTheme({
+    this.name, this.author,
+    required this.close, required this.minimize, required this.maximize, required this.restore});
 
   factory MutableCsdTheme.fromJson(Map<String, dynamic> json) {
     return MutableCsdTheme(
+      name: json["name"],
+      author: json["author"],
       close: MutableCsdButtonStyle.fromJson(json["close"]),
       minimize: MutableCsdButtonStyle.fromJson(json["minimize"]),
       maximize: MutableCsdButtonStyle.fromJson(json["maximize"]),
@@ -123,7 +129,9 @@ class MutableCsdTheme {
   }
 
   Map<String, dynamic> toJson() {
-    return {"close": close.toJson(), "minimize": minimize.toJson(), "maximize": maximize.toJson(), "restore": restore.toJson()};
+    return {
+      "name": name, "author": author,
+      "close": close.toJson(), "minimize": minimize.toJson(), "maximize": maximize.toJson(), "restore": restore.toJson()};
   }
 
   CsdTheme toTheme() {

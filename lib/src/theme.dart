@@ -67,12 +67,16 @@ class CsdButtonStyle {
 }
 
 class CsdTheme {
+  final String? name;
+  final String? author;
   final CsdButtonStyle close;
   final CsdButtonStyle minimize;
   final CsdButtonStyle maximize;
   final CsdButtonStyle restore;
 
   const CsdTheme({
+    this.name,
+    this.author,
     required this.close,
     required this.minimize,
     required this.maximize,
@@ -81,6 +85,8 @@ class CsdTheme {
 
   factory CsdTheme.fromJson(Map<String, dynamic> json) {
     return CsdTheme(
+      name: json["name"],
+      author: json["author"],
       close: CsdButtonStyle.fromJson(json["close"]),
       minimize: CsdButtonStyle.fromJson(json["minimize"]),
       maximize: CsdButtonStyle.fromJson(json["maximize"]),

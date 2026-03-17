@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
             bodyMedium: TextStyle(
                 color: Colors.black
             )
-        ),
+        )
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
@@ -103,6 +103,54 @@ class _MyAppState extends State<MyApp> {
                 bottom: 0,
                 child: Column(
                   children: [
+                    SizedBox(
+                      width: 150,
+                      height: 40,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Name",
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 125, 125, 125)
+                            )
+                        ),
+                        onChanged: (text) {
+                          if(text.isNotEmpty) {
+                            setState(() {
+                              themeState.theme.name = text;
+                            });
+                          }
+                          else {
+                            setState(() {
+                              themeState.theme.name = null;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 150,
+                      height: 40,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            hintText: "Author",
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 125, 125, 125)
+                            )
+                        ),
+                        onChanged: (text) {
+                          if(text.isNotEmpty) {
+                            setState(() {
+                              themeState.theme.author = text;
+                            });
+                          }
+                          else {
+                            setState(() {
+                              themeState.theme.author = null;
+                            });
+                          }
+                        },
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
