@@ -66,7 +66,10 @@ class MutableCsdButtonStyle {
   double width;
   double height;
   double? borderRadius;
-  double? padding;
+  double? paddingLeft;
+  double? paddingRight;
+  double? paddingTop;
+  double? paddingBottom;
   MutableCsdButtonStateStyle normal;
   MutableCsdButtonStateStyle hover;
   MutableCsdButtonStateStyle pressed;
@@ -75,7 +78,10 @@ class MutableCsdButtonStyle {
     required this.width,
     required this.height,
     required this.borderRadius,
-    required this.padding,
+    this.paddingLeft,
+    this.paddingRight,
+    this.paddingTop,
+    this.paddingBottom,
     required this.normal,
     required this.hover,
     required this.pressed,
@@ -86,7 +92,10 @@ class MutableCsdButtonStyle {
       width: json["width"] ?? json["size"] ?? 24,
       height: json["height"] ?? json["size"] ?? 24,
       borderRadius: json["borderRadius"],
-      padding: json["padding"],
+      paddingLeft: json["paddingLeft"] ?? json["paddingHorizontal"] ?? json["padding"],
+      paddingRight: json["paddingRight"] ?? json["paddingHorizontal"] ?? json["padding"],
+      paddingTop: json["paddingTop"] ?? json["paddingVertical"] ?? json["padding"],
+      paddingBottom: json["paddingBottom"] ?? json["paddingVertical"] ?? json["padding"],
       normal: MutableCsdButtonStateStyle.fromJson(json["normal"], base: json),
       hover: MutableCsdButtonStateStyle.fromJson(json["hover"], base: json),
       pressed: MutableCsdButtonStateStyle.fromJson(json["pressed"], base: json),
@@ -94,13 +103,37 @@ class MutableCsdButtonStyle {
   }
 
   Map<String, dynamic> toJson() {
-    var json = {"borderRadius": borderRadius, "padding": padding, "normal": normal.toJson(), "hover": hover.toJson(), "pressed": pressed.toJson()};
+    var json = {"borderRadius": borderRadius, "normal": normal.toJson(), "hover": hover.toJson(), "pressed": pressed.toJson()};
     if (width == height) {
       json["size"] = width;
-      return json;
     }
-    json["width"] = width;
-    json["height"] = height;
+    else {
+      json["width"] = width;
+      json["height"] = height;
+    }
+
+    final bool isHorizontalSymmetric = paddingLeft == paddingRight;
+    final bool isVerticalSymmetric = paddingTop == paddingBottom;
+    final bool isUniform = isHorizontalSymmetric && isVerticalSymmetric && paddingLeft == paddingTop;
+
+    if (isUniform) {
+      json["padding"] = paddingLeft;
+    } else {
+      if (isVerticalSymmetric) {
+        json["paddingVertical"] = paddingTop;
+      } else {
+        json["paddingTop"] = paddingTop;
+        json["paddingBottom"] = paddingBottom;
+      }
+
+      if (isHorizontalSymmetric) {
+        json["paddingHorizontal"] = paddingLeft;
+      } else {
+        json["paddingLeft"] = paddingLeft;
+        json["paddingRight"] = paddingRight;
+      }
+    }
+
     return json;
   }
 }

@@ -5,6 +5,7 @@ class CsdButtonColorAppearance {
   final Widget? icon;
   final Color? borderColor;
   final Color backgroundColor;
+
   const CsdButtonColorAppearance({this.icon, this.borderColor, required this.backgroundColor});
 
   factory CsdButtonColorAppearance.fromJson(Map<String, dynamic> json, {Map<String, dynamic>? base}) {
@@ -12,11 +13,12 @@ class CsdButtonColorAppearance {
     return CsdButtonColorAppearance(
         icon: icon is String
             ? SvgPicture.string(icon,
-            width: base?["iconWidth"] ?? base?["iconSize"] ?? 0,
-            height: base?["iconHeight"] ?? base?["iconSize"] ?? 0,
-            colorFilter: ColorFilter.mode(Color(json["iconColor"] ?? 0), BlendMode.srcIn))
+                width: base?["iconWidth"] ?? base?["iconSize"] ?? 0,
+                height: base?["iconHeight"] ?? base?["iconSize"] ?? 0,
+                colorFilter: ColorFilter.mode(Color(json["iconColor"] ?? 0), BlendMode.srcIn))
             : null,
-        borderColor: Color(json["borderColor"] ?? base?["borderColor"] ?? 0), backgroundColor: Color(json["backgroundColor"] ?? base?["backgroundColor"] ?? 0));
+        borderColor: Color(json["borderColor"] ?? base?["borderColor"] ?? 0),
+        backgroundColor: Color(json["backgroundColor"] ?? base?["backgroundColor"] ?? 0));
   }
 }
 
@@ -25,24 +27,17 @@ class CsdButtonStateStyle {
   final CsdButtonColorAppearance light;
   final CsdButtonColorAppearance dark;
 
-  const CsdButtonStateStyle({
-    this.borderWidth,
-    required this.light,
-    required this.dark
-  });
+  const CsdButtonStateStyle({this.borderWidth, required this.light, required this.dark});
 
   factory CsdButtonStateStyle.fromJson(Map<String, dynamic> json, {Map<String, dynamic>? base}) {
     return CsdButtonStateStyle(
         borderWidth: json["borderWidth"],
-      light: CsdButtonColorAppearance.fromJson(json["light"], base: json),
-      dark: CsdButtonColorAppearance.fromJson(json["dark"], base: json)
-    );
+        light: CsdButtonColorAppearance.fromJson(json["light"], base: json),
+        dark: CsdButtonColorAppearance.fromJson(json["dark"], base: json));
   }
-
 }
 
 class CsdButtonStyle {
-
   final double width;
   final double height;
   final BorderRadius borderRadius;
@@ -51,18 +46,29 @@ class CsdButtonStyle {
   final CsdButtonStateStyle hover;
   final CsdButtonStateStyle pressed;
 
-  const CsdButtonStyle({required this.width, required this.height, required this.borderRadius, required this.padding, required this.normal, required this.hover, required this.pressed});
+  const CsdButtonStyle(
+      {required this.width,
+      required this.height,
+      required this.borderRadius,
+      required this.padding,
+      required this.normal,
+      required this.hover,
+      required this.pressed});
 
   factory CsdButtonStyle.fromJson(Map<String, dynamic> json, {Map<String, dynamic>? base}) {
     return CsdButtonStyle(
-      width: json["width"] ?? json["size"] ?? 24,
+        width: json["width"] ?? json["size"] ?? 24,
         height: json["height"] ?? json["size"] ?? 24,
         borderRadius: BorderRadius.circular(json["borderRadius"] ?? 0),
-        padding: EdgeInsets.symmetric(horizontal: json["padding"] ?? 0),
-      normal: CsdButtonStateStyle.fromJson(json["normal"], base: json),
-      hover: CsdButtonStateStyle.fromJson(json["hover"], base: json),
-      pressed: CsdButtonStateStyle.fromJson(json["pressed"], base: json)
-    );
+        padding: EdgeInsets.only(
+          left: json["paddingLeft"] ?? json["paddingHorizontal"] ?? json["padding"] ?? 0,
+          right: json["paddingRight"] ?? json["paddingHorizontal"] ?? json["padding"] ?? 0,
+          top: json["paddingTop"] ?? json["paddingVertical"] ?? json["padding"] ?? 0,
+          bottom: json["paddingBottom"] ?? json["paddingVertical"] ?? json["padding"] ?? 0,
+        ),
+        normal: CsdButtonStateStyle.fromJson(json["normal"], base: json),
+        hover: CsdButtonStateStyle.fromJson(json["hover"], base: json),
+        pressed: CsdButtonStateStyle.fromJson(json["pressed"], base: json));
   }
 }
 

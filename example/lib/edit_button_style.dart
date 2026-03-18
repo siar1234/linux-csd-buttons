@@ -3,6 +3,7 @@ import 'package:example/main.dart';
 import 'package:example/theme_state.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:linux_csd_buttons/linux_csd_buttons.dart';
 
@@ -18,44 +19,9 @@ class EditButtonStyle extends StatefulWidget {
 }
 
 class _EditButtonStyleState extends State<EditButtonStyle> {
-
-  final widthController = TextEditingController();
-  final heightController = TextEditingController();
-  final borderRadiusController = TextEditingController();
-  final paddingController = TextEditingController();
-  final normalBorderWidthController = TextEditingController();
-  final hoverBorderWidthController = TextEditingController();
-  final pressedBorderWidthController = TextEditingController();
-  Map<String, TextEditingController> iconSizeControllers = {};
-
-  @override
-  void initState() {
-    final theme = themeState.theme;
-    final buttonStyle = switch(widget.type) {
-      CsdButtonType.close => theme.close,
-      CsdButtonType.minimize => theme.minimize,
-      CsdButtonType.maximize => theme.maximize,
-      CsdButtonType.restore => theme.restore
-    };
-    widthController.text = buttonStyle.width.toString();
-    heightController.text = buttonStyle.height.toString();
-    borderRadiusController.text = buttonStyle.borderRadius.toString();
-    paddingController.text = buttonStyle.padding.toString();
-    normalBorderWidthController.text = buttonStyle.normal.borderWidth.toString();
-    hoverBorderWidthController.text = buttonStyle.hover.borderWidth.toString();
-    pressedBorderWidthController.text = buttonStyle.pressed.borderWidth.toString();
-    iconSizeControllers.get("Normal_width").text = buttonStyle.normal.iconWidth.toString();
-    iconSizeControllers.get("Normal_height").text = buttonStyle.normal.iconHeight.toString();
-    iconSizeControllers.get("Hover_width").text = buttonStyle.normal.iconWidth.toString();
-    iconSizeControllers.get("Hover_height").text = buttonStyle.normal.iconHeight.toString();
-    iconSizeControllers.get("Pressed_width").text = buttonStyle.pressed.iconWidth.toString();
-    iconSizeControllers.get("Pressed_height").text = buttonStyle.pressed.iconHeight.toString();
-    super.initState();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
-
     final mutableTheme = themeState.theme;
     final buttonStyle = switch(widget.type) {
       CsdButtonType.close => mutableTheme.close,
@@ -70,8 +36,12 @@ class _EditButtonStyleState extends State<EditButtonStyle> {
         children: [
           _Line(title: "Width", widget: SizedBox(
             width: 50,
-            child: TextField(
-              controller: widthController,
+            child: TextFormField(
+              initialValue: buttonStyle.width.toString(),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
               textAlign: TextAlign.center,
               onChanged: (text) {
                 final value = double.tryParse(text);
@@ -85,8 +55,12 @@ class _EditButtonStyleState extends State<EditButtonStyle> {
           )),
           _Line(title: "Height", widget: SizedBox(
             width: 50,
-            child: TextField(
-              controller: heightController,
+            child: TextFormField(
+              initialValue: buttonStyle.height.toString(),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
               textAlign: TextAlign.center,
               onChanged: (text) {
                 final value = double.tryParse(text);
@@ -100,8 +74,12 @@ class _EditButtonStyleState extends State<EditButtonStyle> {
           )),
           _Line(title: "Border Radius", widget: SizedBox(
             width: 50,
-            child: TextField(
-              controller: borderRadiusController,
+            child: TextFormField(
+              initialValue: buttonStyle.borderRadius?.toString(),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
               textAlign: TextAlign.center,
               onChanged: (text) {
                 final value = double.tryParse(text);
@@ -113,42 +91,104 @@ class _EditButtonStyleState extends State<EditButtonStyle> {
               },
             ),
           )),
-          _Line(title: "Padding", widget: SizedBox(
+          _Line(title: "Padding Left", widget: SizedBox(
             width: 50,
-            child: TextField(
-              controller: paddingController,
+            child: TextFormField(
+              initialValue: buttonStyle.paddingLeft?.toString(),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
               textAlign: TextAlign.center,
               onChanged: (text) {
                 final value = double.tryParse(text);
                 if(value is double) {
                   mainScreenKey.currentState?.setState(() {
-                    buttonStyle.padding = value;
+                    buttonStyle.paddingLeft = value;
+                  });
+                }
+              },
+            ),
+          )),
+          _Line(title: "Padding Right", widget: SizedBox(
+            width: 50,
+            child: TextFormField(
+              initialValue: buttonStyle.paddingRight?.toString(),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
+              textAlign: TextAlign.center,
+              onChanged: (text) {
+                final value = double.tryParse(text);
+                if(value is double) {
+                  mainScreenKey.currentState?.setState(() {
+                    buttonStyle.paddingRight = value;
+                  });
+                }
+              },
+            ),
+          )),
+          _Line(title: "Padding Top", widget: SizedBox(
+            width: 50,
+            child: TextFormField(
+              initialValue: buttonStyle.paddingTop?.toString(),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
+              textAlign: TextAlign.center,
+              onChanged: (text) {
+                final value = double.tryParse(text);
+                if(value is double) {
+                  mainScreenKey.currentState?.setState(() {
+                    buttonStyle.paddingTop = value;
+                  });
+                }
+              },
+            ),
+          )),
+          _Line(title: "Padding Bottom", widget: SizedBox(
+            width: 50,
+            child: TextFormField(
+              initialValue: buttonStyle.paddingBottom?.toString(),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
+              textAlign: TextAlign.center,
+              onChanged: (text) {
+                final value = double.tryParse(text);
+                if(value is double) {
+                  mainScreenKey.currentState?.setState(() {
+                    buttonStyle.paddingBottom = value;
                   });
                 }
               },
             ),
           )),
           ..._stateStyleItems(
-            controller: normalBorderWidthController,
             buttonStateStyle: buttonStyle.normal,
-            keyword: "Normal"
+            keyword: "Normal",
+              context: context
           ),
           ..._stateStyleItems(
-              controller: hoverBorderWidthController,
               buttonStateStyle: buttonStyle.hover,
-              keyword: "Hover"
+              keyword: "Hover",
+              context: context
           ),
           ..._stateStyleItems(
-              controller: pressedBorderWidthController,
               buttonStateStyle: buttonStyle.pressed,
-              keyword: "Pressed"
+              keyword: "Pressed",
+            context: context
           ),
         ],
       ),
     );
   }
 
-  List<Widget> _stateStyleItems({required TextEditingController controller, required MutableCsdButtonStateStyle buttonStateStyle, required String keyword}) {
+  List<Widget> _stateStyleItems({required MutableCsdButtonStateStyle buttonStateStyle, required String keyword, required BuildContext context}) {
+    final appearance = Theme.brightnessOf(context) == Brightness.light ? buttonStateStyle.light : buttonStateStyle.dark;
     return [
       _Line(title: "$keyword Icon", widget: Row(children: [SvgPicture.string(buttonStateStyle.icon ?? ""), IconButton(onPressed: () async {
         final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ["svg"], allowMultiple: false);
@@ -168,8 +208,8 @@ class _EditButtonStyleState extends State<EditButtonStyle> {
       ],)),
       _Line(title: "$keyword Icon Width", widget: SizedBox(
         width: 50,
-        child: TextField(
-          controller: iconSizeControllers.get("${keyword}_width"),
+        child: TextFormField(
+          initialValue: buttonStateStyle.iconWidth.toString(),
           textAlign: TextAlign.center,
           onChanged: (text) {
             final value = double.tryParse(text);
@@ -183,8 +223,12 @@ class _EditButtonStyleState extends State<EditButtonStyle> {
       )),
       _Line(title: "$keyword Icon Height", widget: SizedBox(
         width: 50,
-        child: TextField(
-          controller: iconSizeControllers.get("${keyword}_height"),
+        child: TextFormField(
+          initialValue: buttonStateStyle.iconHeight.toString(),
+          keyboardType: TextInputType.numberWithOptions(decimal: true),
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+          ],
           textAlign: TextAlign.center,
           onChanged: (text) {
             final value = double.tryParse(text);
@@ -198,8 +242,12 @@ class _EditButtonStyleState extends State<EditButtonStyle> {
       )),
       _Line(title: "$keyword Border Width", widget: SizedBox(
         width: 50,
-        child: TextField(
-          controller: controller,
+        child: TextFormField(
+          initialValue: buttonStateStyle.borderWidth?.toString(),
+          keyboardType: TextInputType.numberWithOptions(decimal: true),
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+          ],
           textAlign: TextAlign.center,
           onChanged: (text) {
             final value = double.tryParse(text);
@@ -211,13 +259,6 @@ class _EditButtonStyleState extends State<EditButtonStyle> {
           },
         ),
       )),
-      ..._appearanceItems(appearance: buttonStateStyle.light, keyword: "$keyword Light", prefix: "${keyword}_Light_"),
-      ..._appearanceItems(appearance: buttonStateStyle.dark, keyword: "$keyword Dark", prefix: "${keyword}_Dark_")
-    ];
-  }
-
-  List<Widget> _appearanceItems({required MutableCsdButtonColorAppearance appearance, required String keyword, required String prefix}) {
-    return [
       _Line(title: "$keyword Icon Color", widget: Row(
         children: [
           Icon(Icons.circle, color: appearance.iconColor ?? Colors.transparent),
@@ -259,7 +300,6 @@ class _EditButtonStyleState extends State<EditButtonStyle> {
       ))
     ];
   }
-
 }
 
 class _Line extends StatelessWidget {
@@ -280,11 +320,5 @@ class _Line extends StatelessWidget {
       ),
       widget
     ]);
-  }
-}
-
-extension CustomExtension on Map<String, TextEditingController> {
-  TextEditingController get(String key) {
-    return putIfAbsent(key, () => TextEditingController());
   }
 }
