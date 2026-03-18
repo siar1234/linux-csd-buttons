@@ -29,10 +29,20 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   var isLightMode = true;
+  var isButtonsOnLeft = false;
 
   @override
   Widget build(BuildContext context) {
     final csdTheme = themeState.theme.toTheme();
+    final buttons = [
+      CsdButton(theme: csdTheme, type: CsdButtonType.minimize, onPressed: () {
+
+      }),
+      MaximizeOrRestoreButton(csdThemeData: csdTheme),
+      CsdButton(theme: csdTheme, type: CsdButtonType.close, onPressed: () {
+
+      })
+    ];
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -72,28 +82,26 @@ class _MyAppState extends State<MyApp> {
               Positioned(
                   left: 0,
                   right: 0,
-                  top: 0,
+                  top: 10,
                   child: Text("Theme Generator", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
               Positioned(
+                left: 0,
                   right: 0,
                   top: 0,
                   child: SizedBox(
                     width: 200,
                     height: 40,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 4.5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          CsdButton(theme: csdTheme, type: CsdButtonType.minimize, onPressed: () {
-
-                          }),
-                          MaximizeOrRestoreButton(csdThemeData: csdTheme),
-                          CsdButton(theme: csdTheme, type: CsdButtonType.close, onPressed: () {
-
-                          }),
-                        ],
-                      ),
+                    child: Row(
+                      mainAxisAlignment: isButtonsOnLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
+                      children: isButtonsOnLeft ? [
+                        buttons[2],
+                        buttons[0],
+                        buttons[1]
+                      ] : [
+                        buttons[0],
+                        buttons[1],
+                        buttons[2]
+                      ],
                     ),
                   )),
               Positioned(
@@ -154,6 +162,11 @@ class _MyAppState extends State<MyApp> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Switch(value: isButtonsOnLeft, onChanged: (value) {
+                          setState(() {
+                            isButtonsOnLeft = value;
+                          });
+                        }),
                         Switch(value: isLightMode, onChanged: (value) {
                           setState(() {
                             isLightMode = value;
