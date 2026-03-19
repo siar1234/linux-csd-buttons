@@ -1,6 +1,6 @@
 name: linux_csd_buttons
 description: Client-Side Decoration (CSD) window controls for Linux, fully customizable via JSON themes.
-version: 1.1.0
+version: 1.1.1
 repository: https://github.com/siar1234/linux-csd-buttons
 
 environment:

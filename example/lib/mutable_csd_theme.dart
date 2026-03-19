@@ -42,9 +42,9 @@ class MutableCsdButtonStateStyle {
   factory MutableCsdButtonStateStyle.fromJson(Map<String, dynamic> json, {Map<String, dynamic>? base}) {
     return MutableCsdButtonStateStyle(
       icon: json["icon"],
-      iconWidth: json["iconWidth"] ?? json["iconSize"] ?? 0,
-      iconHeight: json["iconHeight"] ?? json["iconSize"] ?? 0,
-      borderWidth: json["borderWidth"],
+      iconWidth: _asDouble(json["iconWidth"] ?? json["iconSize"]) ?? 0,
+      iconHeight: _asDouble(json["iconHeight"] ?? json["iconSize"]) ?? 0,
+      borderWidth: _asDouble(json["borderWidth"]),
       light: MutableCsdButtonColorAppearance.fromJson(json["light"], base: json),
       dark: MutableCsdButtonColorAppearance.fromJson(json["dark"], base: json),
     );
@@ -89,13 +89,13 @@ class MutableCsdButtonStyle {
 
   factory MutableCsdButtonStyle.fromJson(Map<String, dynamic> json, {Map<String, dynamic>? base}) {
     return MutableCsdButtonStyle(
-      width: json["width"] ?? json["size"] ?? 24,
-      height: json["height"] ?? json["size"] ?? 24,
-      borderRadius: json["borderRadius"],
-      paddingLeft: json["paddingLeft"] ?? json["paddingHorizontal"] ?? json["padding"],
-      paddingRight: json["paddingRight"] ?? json["paddingHorizontal"] ?? json["padding"],
-      paddingTop: json["paddingTop"] ?? json["paddingVertical"] ?? json["padding"],
-      paddingBottom: json["paddingBottom"] ?? json["paddingVertical"] ?? json["padding"],
+      width: _asDouble(json["width"] ?? json["size"]) ?? 24,
+      height: _asDouble(json["height"] ?? json["size"]) ?? 24,
+      borderRadius: _asDouble(json["borderRadius"]),
+      paddingLeft: _asDouble(json["paddingLeft"] ?? json["paddingHorizontal"] ?? json["padding"]),
+      paddingRight: _asDouble(json["paddingRight"] ?? json["paddingHorizontal"] ?? json["padding"]),
+      paddingTop: _asDouble(json["paddingTop"] ?? json["paddingVertical"] ?? json["padding"]),
+      paddingBottom: _asDouble(json["paddingBottom"] ?? json["paddingVertical"] ?? json["padding"]),
       normal: MutableCsdButtonStateStyle.fromJson(json["normal"], base: json),
       hover: MutableCsdButtonStateStyle.fromJson(json["hover"], base: json),
       pressed: MutableCsdButtonStateStyle.fromJson(json["pressed"], base: json),
@@ -170,4 +170,11 @@ class MutableCsdTheme {
   CsdTheme toTheme() {
     return CsdTheme.fromJson(toJson());
   }
+}
+
+double? _asDouble(dynamic value) {
+  if(value is num) {
+    return value.toDouble();
+  }
+  return null;
 }

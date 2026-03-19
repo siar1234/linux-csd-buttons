@@ -13,8 +13,8 @@ class CsdButtonColorAppearance {
     return CsdButtonColorAppearance(
         icon: icon is String
             ? SvgPicture.string(icon,
-                width: base?["iconWidth"] ?? base?["iconSize"] ?? 0,
-                height: base?["iconHeight"] ?? base?["iconSize"] ?? 0,
+                width: _asDouble(base?["iconWidth"] ?? base?["iconSize"]) ?? 0,
+                height: _asDouble(base?["iconHeight"] ?? base?["iconSize"]) ?? 0,
                 colorFilter: ColorFilter.mode(Color(json["iconColor"] ?? 0), BlendMode.srcIn))
             : null,
         borderColor: Color(json["borderColor"] ?? base?["borderColor"] ?? 0),
@@ -31,7 +31,7 @@ class CsdButtonStateStyle {
 
   factory CsdButtonStateStyle.fromJson(Map<String, dynamic> json, {Map<String, dynamic>? base}) {
     return CsdButtonStateStyle(
-        borderWidth: json["borderWidth"],
+        borderWidth: _asDouble(json["borderWidth"]),
         light: CsdButtonColorAppearance.fromJson(json["light"], base: json),
         dark: CsdButtonColorAppearance.fromJson(json["dark"], base: json));
   }
@@ -57,14 +57,14 @@ class CsdButtonStyle {
 
   factory CsdButtonStyle.fromJson(Map<String, dynamic> json, {Map<String, dynamic>? base}) {
     return CsdButtonStyle(
-        width: json["width"] ?? json["size"] ?? 24,
-        height: json["height"] ?? json["size"] ?? 24,
-        borderRadius: BorderRadius.circular(json["borderRadius"] ?? 0),
+        width: _asDouble(json["width"] ?? json["size"]) ?? 24,
+        height: _asDouble(json["height"] ?? json["size"]) ?? 24,
+        borderRadius: BorderRadius.circular(_asDouble(json["borderRadius"]) ?? 0),
         padding: EdgeInsets.only(
-          left: json["paddingLeft"] ?? json["paddingHorizontal"] ?? json["padding"] ?? 0,
-          right: json["paddingRight"] ?? json["paddingHorizontal"] ?? json["padding"] ?? 0,
-          top: json["paddingTop"] ?? json["paddingVertical"] ?? json["padding"] ?? 0,
-          bottom: json["paddingBottom"] ?? json["paddingVertical"] ?? json["padding"] ?? 0,
+          left: _asDouble(json["paddingLeft"] ?? json["paddingHorizontal"] ?? json["padding"]) ?? 0,
+          right: _asDouble(json["paddingRight"] ?? json["paddingHorizontal"] ?? json["padding"]) ?? 0,
+          top: _asDouble(json["paddingTop"] ?? json["paddingVertical"] ?? json["padding"]) ?? 0,
+          bottom: _asDouble(json["paddingBottom"] ?? json["paddingVertical"] ?? json["padding"]) ?? 0,
         ),
         normal: CsdButtonStateStyle.fromJson(json["normal"], base: json),
         hover: CsdButtonStateStyle.fromJson(json["hover"], base: json),
@@ -99,4 +99,11 @@ class CsdTheme {
       restore: CsdButtonStyle.fromJson(json["restore"]),
     );
   }
+}
+
+double? _asDouble(dynamic value) {
+  if(value is num) {
+    return value.toDouble();
+  }
+  return null;
 }
